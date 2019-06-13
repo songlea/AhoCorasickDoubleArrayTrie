@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
+import com.songlea.dat.AhoCorasickDoubleArrayTrie;
 import junit.framework.TestCase;
 import org.ahocorasick.trie.Trie;
 
@@ -28,10 +28,8 @@ import java.util.*;
 /**
  * @author hankcs
  */
-public class TestAhoCorasickDoubleArrayTrie extends TestCase
-{
-    private AhoCorasickDoubleArrayTrie<String> buildASimpleAhoCorasickDoubleArrayTrie()
-    {
+public class TestAhoCorasickDoubleArrayTrie extends TestCase {
+    private AhoCorasickDoubleArrayTrie<String> buildASimpleAhoCorasickDoubleArrayTrie() {
         // Collect test data set
         TreeMap<String, String> map = new TreeMap<String, String>();
         String[] keyArray = new String[]
@@ -41,8 +39,7 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
                         "she",
                         "he"
                 };
-        for (String key : keyArray)
-        {
+        for (String key : keyArray) {
             map.put(key, key);
         }
         // Build an AhoCorasickDoubleArrayTrie
@@ -51,15 +48,12 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         return acdat;
     }
 
-    private void validateASimpleAhoCorasickDoubleArrayTrie(AhoCorasickDoubleArrayTrie<String> acdat)
-    {
+    private void validateASimpleAhoCorasickDoubleArrayTrie(AhoCorasickDoubleArrayTrie<String> acdat) {
         // Test it
         final String text = "uhers";
-        acdat.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<String>()
-        {
+        acdat.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<String>() {
             @Override
-            public void hit(int begin, int end, String value)
-            {
+            public void hit(int begin, int end, String value) {
                 System.out.printf("[%d:%d]=%s\n", begin, end, value);
                 assertEquals(text.substring(begin, end), value);
             }
@@ -69,14 +63,12 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         System.out.println(wordList);
     }
 
-    public void testBuildAndParseSimply() throws Exception
-    {
+    public void testBuildAndParseSimply() throws Exception {
         AhoCorasickDoubleArrayTrie<String> acdat = buildASimpleAhoCorasickDoubleArrayTrie();
         validateASimpleAhoCorasickDoubleArrayTrie(acdat);
     }
 
-    public void testBuildAndParseWithBigFile() throws Exception
-    {
+    public void testBuildAndParseWithBigFile() throws Exception {
         // Load test data from disk
         Set<String> dictionary = loadDictionary("cn/dictionary.txt");
         final String text = loadText("cn/text.txt");
@@ -84,50 +76,42 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         Map<String, String> map = new TreeMap<String, String>();
 //        Map<String, String> map = new HashMap<String, String>();
 //        Map<String, String> map = new LinkedHashMap<String, String>();
-        for (String key : dictionary)
-        {
+        for (String key : dictionary) {
             map.put(key, key);
         }
         // Build an AhoCorasickDoubleArrayTrie
         AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
         acdat.build(map);
         // Test it
-        acdat.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<String>()
-        {
+        acdat.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<String>() {
             @Override
-            public void hit(int begin, int end, String value)
-            {
+            public void hit(int begin, int end, String value) {
                 assertEquals(text.substring(begin, end), value);
             }
         });
     }
 
-    private static class CountHits implements AhoCorasickDoubleArrayTrie.IHitCancellable<String>
-    {
+    private static class CountHits implements AhoCorasickDoubleArrayTrie.IHitCancellable<String> {
         private int count;
         private boolean countAll;
 
-        CountHits(boolean countAll)
-        {
+        CountHits(boolean countAll) {
             this.count = 0;
             this.countAll = countAll;
         }
 
-        public int getCount()
-        {
+        public int getCount() {
             return count;
         }
 
         @Override
-        public boolean hit(int begin, int end, String value)
-        {
+        public boolean hit(int begin, int end, String value) {
             count += 1;
             return countAll;
         }
     }
 
-    public void testMatches()
-    {
+    public void testMatches() {
         Map<String, Integer> map = new HashMap<String, Integer>();
         map.put("space", 1);
         map.put("keyword", 2);
@@ -147,8 +131,7 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         assertFalse(trie.matches("nothing"));
     }
 
-    public void testFirstMatch()
-    {
+    public void testFirstMatch() {
         Map<String, Integer> map = new HashMap<String, Integer>();
         map.put("space", 1);
         map.put("keyword", 2);
@@ -172,8 +155,7 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         assertNull(trie.findFirst(" no pace"));
     }
 
-    public void testCancellation() throws Exception
-    {
+    public void testCancellation() throws Exception {
         // Collect test data set
         TreeMap<String, String> map = new TreeMap<String, String>();
         String[] keyArray = new String[]
@@ -181,8 +163,7 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
                         "foo",
                         "bar"
                 };
-        for (String key : keyArray)
-        {
+        for (String key : keyArray) {
             map.put(key, key);
         }
         // Build an AhoCorasickDoubleArrayTrie
@@ -199,13 +180,11 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         assertEquals(countingMatcher.count, 2);
     }
 
-    private String loadText(String path) throws IOException
-    {
+    private String loadText(String path) throws IOException {
         StringBuilder sbText = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(path), "UTF-8"));
         String line;
-        while ((line = br.readLine()) != null)
-        {
+        while ((line = br.readLine()) != null) {
             sbText.append(line).append("\n");
         }
         br.close();
@@ -213,13 +192,11 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         return sbText.toString();
     }
 
-    private Set<String> loadDictionary(String path) throws IOException
-    {
+    private Set<String> loadDictionary(String path) throws IOException {
         Set<String> dictionary = new TreeSet<String>();
         BufferedReader br = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(path), "UTF-8"));
         String line;
-        while ((line = br.readLine()) != null)
-        {
+        while ((line = br.readLine()) != null) {
             dictionary.add(line);
         }
         br.close();
@@ -227,22 +204,19 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         return dictionary;
     }
 
-    private void runTest(String dictionaryPath, String textPath) throws IOException
-    {
+    private void runTest(String dictionaryPath, String textPath) throws IOException {
         Set<String> dictionary = loadDictionary(dictionaryPath);
         String text = loadText(textPath);
         // Build a ahoCorasickNaive implemented by robert-bor
         Trie ahoCorasickNaive = new Trie();
-        for (String word : dictionary)
-        {
+        for (String word : dictionary) {
             ahoCorasickNaive.addKeyword(word);
         }
         ahoCorasickNaive.parseText(""); // More fairly, robert-bor's implementation needs to call this to build ac automata.
         // Build a AhoCorasickDoubleArrayTrie implemented by hankcs
         AhoCorasickDoubleArrayTrie<String> ahoCorasickDoubleArrayTrie = new AhoCorasickDoubleArrayTrie<String>();
         TreeMap<String, String> dictionaryMap = new TreeMap<String, String>();
-        for (String word : dictionary)
-        {
+        for (String word : dictionary) {
             dictionaryMap.put(word, word);  // we use the same text as the property of a word
         }
         ahoCorasickDoubleArrayTrie.build(dictionaryMap);
@@ -252,11 +226,9 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
         ahoCorasickNaive.parseText(text);
         long costTimeNaive = System.currentTimeMillis() - start;
         start = System.currentTimeMillis();
-        ahoCorasickDoubleArrayTrie.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<String>()
-        {
+        ahoCorasickDoubleArrayTrie.parseText(text, new AhoCorasickDoubleArrayTrie.IHit<String>() {
             @Override
-            public void hit(int begin, int end, String value)
-            {
+            public void hit(int begin, int end, String value) {
 
             }
         });
@@ -275,14 +247,12 @@ public class TestAhoCorasickDoubleArrayTrie extends TestCase
      *
      * @throws Exception
      */
-    public void testBenchmark() throws Exception
-    {
-        runTest("en/dictionary.txt", "en/text.txt");
+    public void testBenchmark() throws Exception {
+        // runTest("en/dictionary.txt", "en/text.txt");
         runTest("cn/dictionary.txt", "cn/text.txt");
     }
 
-    public void testSaveAndLoad() throws Exception
-    {
+    public void testSaveAndLoad() throws Exception {
         AhoCorasickDoubleArrayTrie<String> acdat = buildASimpleAhoCorasickDoubleArrayTrie();
         final String tmpPath = System.getProperty("java.io.tmpdir").replace("\\\\", "/") + "/acdat.tmp";
         System.out.println("Saving acdat to: " + tmpPath);
