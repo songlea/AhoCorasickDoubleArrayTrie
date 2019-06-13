@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-import com.songlea.dat.AhoCorasickDoubleArrayTrie;
+import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
 import junit.framework.TestCase;
 import org.ahocorasick.trie.Trie;
 
